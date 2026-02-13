@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import json
 
 app = Flask(__name__)
@@ -12,13 +12,19 @@ def index():
 
 @app.route("/hello")
 def hello():
-    return jsonify(Hello);
+    return jsonify(Hello)
 
-@app.route("/data")
+@app.route("/data", methods=["GET","POST"])
+
 def data() :
     try:
-        jsonData = open("data.json", "r")
-        return jsonify(json.load(jsonData)),200
+        json_data = open("data.json", "r")
+        loaded_json=json.load(json_data)
+        json_data.close()
+        if request.method == "POST":
+            return "POST request received!"
+        else :
+            return jsonify(loaded_json),200
     except Exception as e:
         return "Failed!"
 
